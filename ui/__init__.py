@@ -1,3 +1,2 @@
-import tkinter as tk
-from .frames.login import LoginFrame
+from .app import App
 

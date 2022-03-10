@@ -1,6 +1,5 @@
-
 import tkinter as tk
-from .main import LandingPage
+from .main_frame import LandingPage
 
 class LoginFrame(tk.Frame):
     OUTSIDE_PADDING = 20
@@ -40,15 +39,15 @@ class LoginFrame(tk.Frame):
         password = self.password_field.get()
 
         from pySpireClient.api_client import ApiClient
-        api_client = ApiClient(hostname, username, password)
-        if (api_client.logged_in()):
+        self.parent.api_client = ApiClient(hostname, username, password)
+        if (self.parent.api_client.logged_in()):
             self.parent.frame.pack_forget()
             self.parent.frame.destroy()
 
             self.parent.frame = LandingPage(self.parent)
             self.parent.frame.pack()
         else:
-            # show a message that the creds are invalid
+            # TODO: pass any exceptions received at lower layers up to the GUI
             pass
 
     def quit(self):

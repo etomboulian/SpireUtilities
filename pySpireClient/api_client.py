@@ -24,12 +24,13 @@ class ApiClient:
 
     def __init__(self, hostname, username, password, port=10880):
         self.root_url = f'https://{hostname}:{port}/api/v2/'
-        #self.company_url = f'{self.base_url}/companies/{SpireCredentials.company}/'
+
         self.auth = HTTPBasicAuth(username, password)
         if not self.logged_in():
-            raise Exception("Unable to login with the given credentials")
+            raise Exception("Unable to authenticate with Spire")
+        
 
-    def check_response(response):
+    def check_response(self, response):
         if response.status_code == 400:
             raise Exception('400 - Bad Request')
         elif response.status_code == 401:
@@ -52,6 +53,8 @@ class ApiClient:
         except Exception:
             raise Exception('Unable to decode response ' + Exception.message)
 
+        return response
+
     def logged_in(self):
         endpoint = self.root_endpoints['status']
         url = self.root_url + endpoint
@@ -60,14 +63,15 @@ class ApiClient:
 
         # throws an exception if there is a problem with the response
         try:
-            self.check_response(response)
+            response = self.check_response(response)
 
             # Check to see that we got a version in the json response to determine if we are logged in or not
             if 'version' in response:
                 return True
             else:
                 return False
-        except Exception:
+        except Exception as e:
+            print('Exception', e)
             pass
 
     def create(self, data: Model) -> object:
