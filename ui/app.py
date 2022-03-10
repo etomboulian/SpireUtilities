@@ -5,5 +5,8 @@ class App(tk.Tk):
     def __init__(self):
         super().__init__()
         self.title('Spire Tools')
-        self.frame = LoginFrame(self)
+        self.show_frame(LoginFrame)
+    
+    def show_frame(self, frameType):
+        self.frame = frameType(self)
         self.frame.pack()

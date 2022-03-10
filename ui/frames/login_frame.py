@@ -44,8 +44,8 @@ class LoginFrame(tk.Frame):
             self.parent.frame.pack_forget()
             self.parent.frame.destroy()
 
-            self.parent.frame = LandingPage(self.parent)
-            self.parent.frame.pack()
+            # send the user to the landing page
+            self.parent.show_frame(LandingPage)
         else:
             # TODO: pass any exceptions received at lower layers up to the GUI
             pass

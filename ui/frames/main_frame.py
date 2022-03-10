@@ -9,4 +9,4 @@ class LandingPage(tk.Frame):
         self.copy_ship_id_to_cust_po_button.pack()
     
     def copy_ship_id_to_cust_po(self):
-        pass
+        print("Doing the things")
