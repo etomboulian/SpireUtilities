@@ -1,7 +1,7 @@
 import datetime
-from ...models import Model
-from ...models.customers import Customer
-from ...models.sales_orders import SalesOrderItem
+from . import Model
+from customer import Customer
+from sales_order_item import SalesOrderItem
 
 class SalesOrder(Model):
     api_endpoint = 'sales_orders'

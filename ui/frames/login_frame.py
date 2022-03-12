@@ -38,8 +38,8 @@ class LoginFrame(tk.Frame):
         username = self.username_field.get()
         password = self.password_field.get()
 
-        from pySpireClient.api_client import ApiClient
-        self.parent.api_client = ApiClient(hostname, username, password)
+        from pySpireClient.api_client_base import ApiClientBase
+        self.parent.api_client = ApiClientBase(hostname, username, password)
         if (self.parent.api_client.logged_in()):
             self.parent.frame.pack_forget()
             self.parent.frame.destroy()
