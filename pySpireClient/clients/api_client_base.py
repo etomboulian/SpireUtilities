@@ -4,8 +4,8 @@ import requests
 import json
 from requests.auth import HTTPBasicAuth
 
-from .utils.spire_json_encoder import SpireJsonEncoder
-from .models import Model
+from ..utils.spire_json_encoder import SpireJsonEncoder
+from ..models import Model
 
 class ApiClientBase:
     headers = {'Content-Type': 'application/json'}

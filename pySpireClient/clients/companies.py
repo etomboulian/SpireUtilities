@@ -1,6 +1,6 @@
 import requests
 from .api_client_base import ApiClientBase
-from .models.company import CompanyList
+from ..models.company import CompanyList
 import marshmallow_dataclass
 
 class Companies(ApiClientBase):
@@ -11,9 +11,6 @@ class Companies(ApiClientBase):
         self.type = 'companies'
         self.base_url = self.root_url
         self.endpoint = self.root_endpoints[self.type]
-    
-    def get(self, id):
-        pass
 
     def list(self):
         url = self.base_url + self.endpoint + '?limit=0'
