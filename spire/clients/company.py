@@ -6,7 +6,7 @@ class Companies:
         self.api_client = api_client
 
     def list(self):
-        return self.api_client.list(CompanyList)
+        return ItemClient(self.api_client, Company, CompanyList).list() #self.api_client.list(CompanyList)
 
 class Company:
     def __init__(self, api_client: str, company_name: str):

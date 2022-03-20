@@ -99,14 +99,15 @@ class ApiClient:
     def delete(self, id):
         raise NotImplementedError()
 
+# Wrapper class around ApiClient to store the single and collection item types to return
 class ItemClient:
-    def __init__(self, api_client, single_item_type, collection_type):
+    def __init__(self, api_client, single_type, collection_type):
         self.api_client = api_client
-        self.item_type_single = single_item_type
+        self.single_type = single_type
         self.collection_type = collection_type
 
     def get(self, id):
-        return self.api_client.get(self.single_item_type, id)
+        return self.api_client.get(self.single_type, id)
 
     def list(self, where=None):
         return self.api_client.list(self.collection_type, filter=where)
