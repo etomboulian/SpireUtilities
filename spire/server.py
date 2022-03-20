@@ -1,4 +1,3 @@
-import requests
 from .clients.api_client import ApiClient
 from .models import Status
 

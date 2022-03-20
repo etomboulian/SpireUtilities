@@ -29,17 +29,15 @@ customers = company.Customers.list()
 print([customer.name for customer in customers])
 
 # Get a single Customer by cust_no from the company
-specific_customer = company.Customers.list(where=('{"customerNo":"FORHIS"}'))
-print(specific_customer[0].customerNo)
-
-specific_customer = company.Customers.get("2")
+specific_customer = company.Customers.list(where=('{"customerNo":"FORHIS"}')).one()
 print(specific_customer.customerNo)
 
 customers = company.Customers.all()
-print([customer.name for customer in customers])
+print([customer.id for customer in customers])
+print(f"Received {len(customers)} records")
 
 # Get a list of orders from the company
-#orders = company.SalesOrders.list()
-#print(orders)
+orders = company.SalesOrders.list()
+print([order.orderNo for order in orders])
 
 

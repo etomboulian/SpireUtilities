@@ -1,7 +1,6 @@
 import requests
-from requests.auth import HTTPBasicAuth
 from pykson import Pykson
-import urllib
+from ..models.record_list import RecordList
 
 class ApiClient:
 
@@ -62,6 +61,35 @@ class ApiClient:
         obj = Pykson().from_json(response.text, type, accept_unknown=True)
         return obj
 
+    def list(self, type, **kwargs):
+        where = kwargs.get('filter', None)
+        records = self.get(type, filter=where).records
+        # Move the returned data records into a custom List type
+        results = RecordList()
+        for item in records:
+            results.append(item)
+        return results
+
+    def all(self, type):
+        page_size = 100
+        # List of all results
+        results = RecordList()
+
+        list = self.get(type, limit=page_size)
+        total_records = list.count
+        total_pages = (total_records//page_size) + 1
+
+        # take all of the records from the first page
+        for item in list.records:
+            results.append(item)
+        
+        for pageNumber in range(1,total_pages):
+            list = self.get(type, start=(pageNumber*page_size), limit=page_size)
+            for item in list.records:
+                results.append(item)
+
+        return results
+
     def update(self, object):
         raise NotImplementedError()
 
@@ -70,3 +98,18 @@ class ApiClient:
 
     def delete(self, id):
         raise NotImplementedError()
+
+class ItemClient:
+    def __init__(self, api_client, single_item_type, collection_type):
+        self.api_client = api_client
+        self.item_type_single = single_item_type
+        self.collection_type = collection_type
+
+    def get(self, id):
+        return self.api_client.get(self.single_item_type, id)
+
+    def list(self, where=None):
+        return self.api_client.list(self.collection_type, filter=where)
+        
+    def all(self):
+        return self.api_client.all(self.collection_type)

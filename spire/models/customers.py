@@ -2,6 +2,7 @@ from pykson import JsonObject, ObjectListField, StringField, IntegerField
 
 class Customer(JsonObject):
     endpoint = 'customers'
+    id = IntegerField()
     customerNo = StringField()
     name = StringField()
 

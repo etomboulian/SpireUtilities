@@ -16,6 +16,7 @@ class Company(JsonObject):
     backup_schedules = ObjectListField(BackupSchedule)
 
 class CompanyList(JsonObject):
+    endpoint = 'company_list'
     records = ObjectListField(Company)
 
 class CompanyLinks(JsonObject):
