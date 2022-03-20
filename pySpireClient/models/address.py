@@ -27,10 +27,10 @@ class Territory:
 class Contact:
     id: Optional[int]
     contact_type: Optional[dict]
-    name: str
-    email: str
-    phone: PhoneNumber
-    fax: FaxNumber
+    name: Optional[str]
+    email: Optional[str]
+    phone: Optional[PhoneNumber]
+    fax: Optional[FaxNumber]
 
 @dataclass
 class SalesTax:
@@ -39,34 +39,34 @@ class SalesTax:
 
 @dataclass
 class Address:
-    id: int
-    type: str 
-    linkTable: str 
-    linkType: str 
-    linkNo: str
-    shipId: str
-    name: str
-    line1: str
-    line2: str
-    line3: str
-    line4: str
-    city: str
-    postalCode: str
-    provState: str 
-    country: str 
-    phone: PhoneNumber 
-    fax: FaxNumber
-    email: str
-    website: str
-    shipCode: str
-    shipDescription: str
-    salesperson: SalesPerson
-    territory: Territory
+    id: Optional[int]
+    type: Optional[str]
+    linkTable: Optional[str]
+    linkType: Optional[str]
+    linkNo: Optional[str]
+    shipId: Optional[str]
+    name: Optional[str]
+    line1: Optional[str]
+    line2: Optional[str]
+    line3: Optional[str]
+    line4: Optional[str]
+    city: Optional[str]
+    postalCode: Optional[str]
+    provState: Optional[str]
+    country: Optional[str]
+    phone: Optional[PhoneNumber]
+    fax: Optional[FaxNumber]
+    email: Optional[str]
+    website: Optional[str]
+    shipCode: Optional[str]
+    shipDescription: Optional[str]
+    salesperson: Optional[SalesPerson]
+    territory: Optional[Territory]
     sellLevel: Optional[int]
-    glAccount: str
-    defaultWarehouse: str
+    glAccount: Optional[str]
+    defaultWarehouse: Optional[str]
     udf: Optional[dict]
-    created: str
-    modified: str
-    contacts: List[Contact]
-    salesTaxes: List[dict]
+    created: Optional[str]
+    modified: Optional[str]
+    contacts: Optional[List[Contact]]
+    salesTaxes: Optional[List[dict]]

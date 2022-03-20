@@ -1,11 +1,8 @@
 from argparse import Namespace
-from dataclasses import dataclass
 import requests
 import json
-from requests.auth import HTTPBasicAuth
 
 from ..utils.spire_json_encoder import SpireJsonEncoder
-from ..models import Model
 
 class ApiClientBase:
     headers = {'Content-Type': 'application/json'}
@@ -56,17 +53,20 @@ class ApiClientBase:
         except Exception:
             raise Exception('Unable to decode response ' + Exception.message)
 
+    def _validate(self, response):
+        self.check_response(response)
+        response = self.from_json(response)
+        return response
+
     def logged_in(self):
         endpoint = self.root_endpoints['status']
         url = self.root_url + endpoint
         
-        response = requests.get(url, auth=self.auth, verify=False)
-
+        response = requests.get(url, auth=self.auth)
 
         try:
             # throws an exception if there is a problem with the response
-            self.check_response(response)
-            response = self.from_json(response)
+            response = self._validate(response)
 
             # Check to see that we got a version in the json response to determine if we are logged in or not
             if 'version' in response:
@@ -77,19 +77,22 @@ class ApiClientBase:
             print('Exception', e)
             pass
 
-    def get(self, id : int) -> Model:
-        url = self.company_r
-        response = requests.get(self.base_url, headers=self.headers, proxies=None, auth=self.auth, verify=False)
-        self.check_response(response)
-        response = self.from_json(response)
+    def get(self, url, **kwargs):
+        params = kwargs.get('params', None)
+        response = requests.get(url, headers=self.headers, auth=self.auth, params=params)
+        response = self._validate(response)
+        return response
 
 
-    def list(self, search_string: str, max_records : int) -> list():
-        pass
+    def list(self, url, **kwargs):
+        params = kwargs.get('params', None)
+        response = requests.get(url, auth=self.auth, headers=self.headers, params=params)
+        response = self._validate(response)
+        return response
 
-    def create(self, data: Model) -> Model:
+    def create(self, data: object) -> object:
         if data.endpoint is None:
-            raise Exception('Unable to Create resource as the type of resource to be created is unknown. model.endpoint is None')
+            raise Exception('Unable to Create resource as the type of resource to be created is unknown. object.endpoint is None')
 
         endpoint = data.endpoint
         response = requests.post(self.company_url + endpoint, headers=self.headers, proxies=None, auth=self.auth, data=json.dumps(o, cls=SpireJsonEncoder), verify=False)
@@ -104,9 +107,9 @@ class ApiClientBase:
             createdObject = json.loads(item_str, object_hook=lambda d: Namespace(**d))
             return createdObject
 
-    def update(self, id : int, data: Model) -> Model:
+    def update(self, id : int, data: object) -> object:
         if data.endpoint is None:
-            raise Exception('Unable to Update resource as the type of resource to be created is unknown. model.endpoint is None')
+            raise Exception('Unable to Update resource as the type of resource to be created is unknown. object.endpoint is None')
             
         endpoint = self.company_endpoints[type]
         response = requests.put(self.company_url + endpoint, headers=self.headers, proxies=None, auth=self.auth, data=json.dumps(data, cls=SpireJsonEncoder), verify=False)

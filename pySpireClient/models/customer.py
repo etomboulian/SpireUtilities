@@ -1,61 +1,79 @@
-from marshmallow import Schema
+from datetime import date, datetime
+from email.policy import default
 from marshmallow_dataclass import dataclass
-from marshmallow_enum import EnumField
-
 from typing import Optional, List
-
 from .address import Address
 
 @dataclass
 class PaymentTerms:
-    id: int
-    code: str
-    description: str
-    daysBeforeDue: int
-    daysAllowed: int
-    discountRate: str
-    applyDiscountToNet: bool
-    applyDiscountToFreight: bool
+    id: Optional[int]
+    code: Optional[str]
+    description: Optional[str]
+    daysBeforeDue: Optional[int]
+    daysAllowed: Optional[int]
+    discountRate: Optional[str]
+    applyDiscountToNet: Optional[bool]
+    applyDiscountToFreight: Optional[bool]
     udf: Optional[dict]
-    createdBy: str
-    modifiedBy: str
-    created: str
-    modified: str
+    createdBy: Optional[str]
+    modifiedBy: Optional[str]
+    created: Optional[str]
+    modified: Optional[str]
 
 @dataclass
 class Customer:
     id: Optional[int]
-    code: str
     customerNo: str
-    name: str
-    foregroundColor: int
-    backgroundColor: int
+    name: Optional[str]
     hold: bool
-    status: str 
-    reference: Optional[str]
-    address: Address
-    shippingAddresses: List[dict]
-    paymentTerms: Optional[PaymentTerms]
-    applyFinanceCharges: bool
+    status: str
     creditType: int
     creditLimit: float
     creditBalance: float
     creditApprovedBy: str
     creditApprovedDate: str
-    currency: str
-    userDef1: str
-    userDef2: str
-    discount: str
+    openOrders: Optional[str]
+    lastInvoiceDate : Optional[str]
+    specialCode: Optional[str]
+    lastYearSales: Optional[float]
+    thisYearSales: Optional[float]
+    nextYearSales: Optional[float]
+    lastYearGP: float
+    thisYearGP: float
+    nextYearGP: float
+    currency: Optional[str]
+    userDef1: Optional[str]
+    userDef2: Optional[str]
+    invoiceType: str
+    statementType: str
+    applyFinanceCharges: bool
+    averageDaysToPay: float
+    #lastPaymentAmt: float
+    lastPaymentDate: Optional[date]
+    reference: Optional[str]
+    poRequired: bool
+    paymentTerms: Optional[PaymentTerms]
+    foregroundColor: Optional[int]
+    backgroundColor: Optional[int]
+    discount: float
     receivableAccount: str
-    defaultShipTo: str
-    specialCode: str
+    defaultShipTo: Optional[str]
     upload: bool
-    lastModified: str
-    paymentProviderId: Optional[int]
-    udf: Optional[dict]
-    createdBy: str
-    modifiedBy: str
+    lastModified: datetime
+    address: Optional[Address]
+    salesTaxAssociation: Optional[dict]
     created: str
+    createdBy: str
     modified: str
+    modifiedBy: str
     links: dict
-    
+
+@dataclass
+class CustomerList:
+    records: Optional[List[Customer]]
+    start: Optional[int]
+    limit: Optional[int]
+    count: Optional[int]
+
+class SalesOrderCustomer:
+    pass

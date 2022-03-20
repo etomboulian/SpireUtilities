@@ -1,6 +1,5 @@
 import tkinter as tk
 from .frames import LoginFrame
-from ui import frames
 
 class App(tk.Tk):
     frames = {}

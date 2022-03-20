@@ -20,5 +20,14 @@ class Company:
     backup_schedules: List[dict]
 
 @dataclass
+class CompanyLinks:
+    links: Optional[dict]
+    name: Optional[str]
+    description: Optional[str]
+    needs_upgrade: bool
+    url: Optional[str]
+
+
+@dataclass
 class CompanyList:
     records: Optional[List[Company]]

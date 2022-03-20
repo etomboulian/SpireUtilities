@@ -1,13 +1,14 @@
-from . import Model
+from marshmallow_dataclass import dataclass
+from typing import Optional, List
 
-class SalesOrderItem(Model):
-    endpoint = 'sales_order_items'
+from .inventory import UOM
 
-    def __init__(self, partNo: str,  whse: str, id: int = None, orderQty: int = None, committedQty: int = None, sellMeasure: str = None, unitPrice: float = None):
-        self.id = id
-        self.partNo = partNo
-        self.whse = whse
-        self.orderQty = orderQty
-        self.committedQty = committedQty
-        self.sellMeasure = sellMeasure
-        self.unitPrice = unitPrice
+@dataclass
+class SalesOrderItem:
+    id: int
+    whse: str
+    partNo: str
+    orderQty: float
+    committedQty: float
+    sellMeasure: UOM
+    unitPrice: float
