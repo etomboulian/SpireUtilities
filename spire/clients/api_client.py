@@ -1,6 +1,6 @@
 import requests
 from pykson import Pykson
-from ..models.record_list import RecordList
+from ..models.data.record_list import RecordList
 
 class ApiClient:
 

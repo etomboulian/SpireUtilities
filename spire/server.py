@@ -24,9 +24,9 @@ class Server:
 
     @property
     def Companies(self):
-        from .clients.companies import Companies
+        from .clients.company import Companies
         return Companies(self.api_client)
 
     def Company(self, company_name):
-        from .clients.companies import Company
+        from .clients.company import Company
         return Company(self.api_client, company_name)
