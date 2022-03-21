@@ -2,8 +2,9 @@
 class Editable():
 
     def edit(self):
+        # We can already directly edit an object so just use this to mark self as in edit and return self
         self.metadata['in_edit'] = self
-        return self.metadata['in_edit']
+        return self
 
     def save(self):
         if self.metadata['in_edit'] is not None:
