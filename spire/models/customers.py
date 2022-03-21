@@ -1,14 +1,23 @@
-from pykson import JsonObject, ObjectListField, StringField, IntegerField
+from pykson import JsonObject, ObjectListField, StringField, IntegerField, BooleanField
 
-class Customer(JsonObject):
-    endpoint = 'customers'
+from spire.models.editable import Editable
+
+class Customer(JsonObject, Editable):
+    metadata = {
+        'endpoint':'customers',
+        'in_edit': None,
+        'api_client': None
+    }
+    
     id = IntegerField()
     customerNo = StringField()
     name = StringField()
+    hold = BooleanField()    
 
 class CustomerList(JsonObject):
-    endpoint = 'customers'
-
+    metadata = {
+        'endpoint': 'customers'
+    }
     records = ObjectListField(Customer)
     count = IntegerField()
     start = IntegerField()

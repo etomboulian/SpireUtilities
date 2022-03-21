@@ -38,17 +38,29 @@ class LoginFrame(tk.Frame):
         username = self.username_field.get()
         password = self.password_field.get()
 
-        from pySpireClient.clients.api_client_base import ApiClientBase
-        self.parent.api_client = ApiClientBase(hostname, username, password)
-        if (self.parent.api_client.logged_in()):
-            self.parent.frame.pack_forget()
-            self.parent.frame.destroy()
-
-            # send the user to the landing page
-            self.parent.show_frame(LandingPage)
-        else:
-            # TODO: pass any exceptions received at lower layers up to the GUI
-            pass
+       
+        try:
+            from spire import ApiClient
+            self.parent.api_client = ApiClient(hostname, username, password)
+            if (self.parent.api_client.authenticated):
+                self.parent.frame.pack_forget()
+                self.parent.frame.destroy()
+                # send the user to the landing page
+                self.parent.show_frame(LandingPage)
+            else:
+                # TODO: pass any exceptions received at lower layers up to the GUI
+                pass
+        except Exception as e:
+            popup_window = tk.Tk()
+            popup_window.wm_title("Login Error")
+            popup_window.geometry("300x200")
+            message = e
+            label = tk.Label(popup_window, text=message, wraplength=300, justify=tk.LEFT)
+            label.pack()
+            close_button = tk.Button(popup_window, text="Ok", command=popup_window.destroy)
+            close_button.pack()
+            
+            print(e)
 
     def quit(self):
         self.parent.destroy()

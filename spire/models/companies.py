@@ -16,11 +16,16 @@ class Company(JsonObject):
     backup_schedules = ObjectListField(BackupSchedule)
 
 class CompanyList(JsonObject):
-    endpoint = 'company_list'
+    metadata = {
+        'endpoint': 'company_list'
+    }
+    
     records = ObjectListField(Company)
 
 class CompanyLinks(JsonObject):
-    endpoint = 'none'
+    metadata = {
+        'endpoint': 'none'
+    }
 
     links = JsonField()
     name = StringField()
