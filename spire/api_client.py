@@ -49,7 +49,7 @@ class ApiClient:
     def get(self, type, id=None, **kwargs):
         # if we have a company name then we have a selected company, if not then we get endpoints off the base
         if self.company_name is None:
-            url = self.root_url + self.root_endpoints[type.endpoint]
+            url = self.root_url + self.root_endpoints[type.metadata['endpoint']]
         else:
             url = self.root_url + self.root_endpoints['company_list'] + self.company_name + '/' + self.company_endpoints[type.metadata['endpoint']]
 
@@ -90,6 +90,7 @@ class ApiClient:
         page_size = 100
         results = RecordList()
 
+        # Get the first page
         list = self.get(type, limit=page_size)
         total_records = list.count
         total_pages = (total_records//page_size) + 1
@@ -108,26 +109,34 @@ class ApiClient:
         return results
 
     def save(self, obj):
-        url = self.root_url + self.root_endpoints['company_list'] + self.company_name + '/' + self.company_endpoints[obj.metadata['endpoint']] + str(obj.id)
-        # clear the metadata dict before serialization
-        # self._clear_metadata(obj)
-        
-        # Do the update using the object passed in
-        response = self.session.put(url, data=Pykson().to_json(obj))
-        self._validate(response)
-        if response.status_code not in (200, 201):
-            raise Exception("Unable to update the current object")
+        # if the object already has an id then try to update it
+        if obj.id is not None:
+            url = self.root_url + self.root_endpoints['company_list'] + self.company_name + '/' + self.company_endpoints[obj.metadata['endpoint']] + str(obj.id)
+            obj._validate_content()
+            # Do the update
+            response = self.session.put(url, data=Pykson().to_json(obj))
+            self._validate(response)
+            if response.status_code not in (200, 201):
+                raise Exception("Unable to update the current object")
 
+        # if the object has no id then create it
+        else:
+            url = self.root_url + self.root_endpoints['company_list'] + self.company_name + '/' + self.company_endpoints[obj.metadata['endpoint']]
+            # Do the create
+            response = self.session.post(url, data=Pykson().to_json(obj))
+            self._validate(response)
+            if response.status_code not in [201]:
+                raise Exception("Unable to create the new object")
 
     def create(self, object):
         raise NotImplementedError()
 
     def delete(self, obj):
         url = self.root_url + self.root_endpoints['company_list'] + self.company_name + '/' + self.company_endpoints[obj.metadata['endpoint']] + str(obj.id)
-        # self._clear_metadata(obj)
+        # Do Delete
         response = self.session.delete(url, data=Pykson().to_json(obj))
         self._validate(response)
-        if response.status_code not in (204):
+        if response.status_code not in [204]:
             raise Exception("Unable to delete the passed in object")
 
 # Wrapper class around ApiClient to manage the single and collection item types
@@ -149,4 +158,4 @@ class ItemClient:
         return self.api_client.all(self.collection_type)
 
     def new(self):
-        pass
+        return Pykson().from_json("{}", self.single_type).edit()

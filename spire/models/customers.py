@@ -4,15 +4,20 @@ from spire.models.editable import Editable
 
 class Customer(JsonObject, Editable):
     metadata = {
-        'endpoint':'customers',
-        'in_edit': None,
-        'api_client': None
+        'endpoint':'customers'
     }
     
     id = IntegerField()
     customerNo = StringField()
     name = StringField()
     hold = BooleanField()    
+
+    def __str__(self):
+        return f'id: {self.id}, customerNo: {self.customerNo}, name: {self.name}, hold: {self.hold}'
+
+    def _validate_content(self):
+        # Here we should figure out if we have all of the required fields in order to save the object
+        return True
 
 class CustomerList(JsonObject):
     metadata = {

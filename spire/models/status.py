@@ -1,5 +1,8 @@
 from pykson import JsonObject, StringField
 
 class Status(JsonObject):
-    endpoint = 'status'
+    metadata = {
+        'endpoint': 'status'
+    }
+
     version = StringField()

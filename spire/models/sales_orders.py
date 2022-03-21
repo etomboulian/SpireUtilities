@@ -52,7 +52,9 @@ class SalesOrder(JsonObject):
     jobNo = StringField()
 
 class SalesOrderList(JsonObject):
-    endpoint = 'sales_orders'
+    metadata = {
+        'endpoint': 'sales_orders'
+    }
     records = ObjectListField(SalesOrder)
     count = IntegerField()
     start = IntegerField()
