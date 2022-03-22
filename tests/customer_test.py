@@ -1,5 +1,5 @@
 from datetime import datetime
-from ..spire.api_client import ApiClient
+from spire import ApiClient
 
 hostname = 'better-snow-2961.spirelan.com'
 username = 'ApiUser'
@@ -22,7 +22,10 @@ print([customer.id for customer in inspire.Customers.all()])
 forhis = inspire.Customers.get(2)
 
 # Change the customer name to a unique value
-forhis.name = f"TEST CUSTOMER {datetime.now}"
+forhis.name = f"TEST CUSTOMER {datetime.now()}"
+
+# Show the object to update
+print(forhis)
 
 # Save the customer back into the database
 forhis.save()

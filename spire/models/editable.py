@@ -7,12 +7,10 @@ class Editable():
         return self
 
     def save(self):
-        if self.metadata['in_edit'] is not None:
-            api_client = self.metadata['api_client']
-            api_client.save(self)
-            self.metadata['in_edit'] = None
-        else:
-            raise Exception("cannot save an item that doesn't have a pending object to edit")
+        api_client = self.metadata['api_client']
+        api_client.save(self)
+        self.metadata['in_edit'] = None
+
 
     def delete(self):
         if hasattr(self, 'metadata'):

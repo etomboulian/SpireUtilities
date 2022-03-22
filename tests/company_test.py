@@ -1,4 +1,4 @@
-from ..spire import ApiClient
+from spire import ApiClient
 
 hostname = 'better-snow-2961.spirelan.com'
 username = 'ApiUser'
@@ -15,4 +15,7 @@ print([company.name for company in spire.Companies.list()])
 inspire = spire.Company('inspire2021')
 
 # Get company information about inspire2021
-print(inspire.info().needs_upgrade)
+company_info = inspire.info()
+
+# Print out customer info
+print(f'Company Name: {company_info.name}, Description: {company_info.description}, needs_upgrad {company_info.needs_upgrade}')
