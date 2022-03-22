@@ -1,0 +1,97 @@
+from pykson import JsonObject, JsonField, ObjectListField, ObjectField, StringField, IntegerField, DateField, FloatField, BooleanField, DateTimeField
+from spire.models.data.editable_object import EditableObject
+from .addresses import OrderAddress, OrderShippingAddress
+from .contacts import OrderContact
+
+
+class Customer(JsonObject):
+    id = IntegerField()
+    customerNo = StringField()
+    name = StringField()
+    userDef2 = StringField()
+    invoiceType = StringField()
+    hold = BooleanField()
+    foregroundColor = IntegerField()
+    backgroundColor = IntegerField()
+
+class SalesOrder(JsonObject, EditableObject):
+    metadata = { 'endpoint': 'sales_orders'}
+    id = IntegerField()
+    orderNo = StringField()
+    invoiceNo = StringField()
+    customer = ObjectField(Customer)
+    status = StringField()
+    type = StringField()
+    hold = BooleanField()
+    orderDate = DateField()
+    invoiceDate = DateField()
+    requiredDate = DateField()
+    customerPO = StringField()
+    batchNo = StringField()
+    division = StringField()
+    location = StringField()
+    profitCenter = StringField()
+    fob = StringField()
+    incoterms = StringField()
+    incotermsPlace = StringField()
+    salespersonNo = StringField()
+    territoryCode = StringField()
+    freight = FloatField(accepts_string=True)
+    weight = FloatField(accepts_string=True)
+    discount = FloatField(accepts_string=True)
+    totalDiscount = FloatField(accepts_string=True)
+    subtotal = FloatField(accepts_string=True)
+    subtotalOrdered = FloatField(accepts_string=True)
+    total = FloatField(accepts_string=True)
+    baseTotal = FloatField(accepts_string=True)
+    total2 = FloatField(accepts_string=True)
+    totalOrdered = FloatField(accepts_string=True)
+    backordered = BooleanField(accepts_string=True)
+    totalBackorderQty = FloatField(accepts_string=True)
+    grossProfit = FloatField(accepts_string=True)
+    grossProfitMargin = FloatField(accepts_string=True)
+    grossProfit2 = FloatField(accepts_string=True)
+    totalCostAverage = FloatField(accepts_string=True)
+    totalCostAverage2 = FloatField(accepts_string=True)
+    totalCostCurrent = FloatField(accepts_string=True)
+    totalCostCurrent2 = FloatField(accepts_string=True)
+    totalCostStandard = FloatField(accepts_string=True)
+    totalCostStandard2 = FloatField(accepts_string=True)
+    phaseId = StringField()
+    termsCode = StringField()
+    termsText = StringField()
+    referenceNo = StringField()
+    currency = StringField()
+    shippingCarrier = StringField()
+    shipDate = StringField()
+    trackingNo = StringField()
+    jobNo = StringField()
+    jobAccountNo = StringField()
+    wasQuoteNo = StringField()
+    amountPaid = FloatField()
+    amountUnpaid = FloatField()
+    amountUnpaidOrdered = FloatField()
+    percentPaid = StringField()
+    address = ObjectField(OrderAddress)
+    shippingAddress = ObjectField(OrderShippingAddress)
+    contact = ObjectField(OrderContact)
+    deleted = StringField()
+    deletedBy = StringField()
+    created = StringField()
+    createdBy = StringField()
+    modified = StringField()
+    modifiedBy = StringField()
+    links = JsonObject()
+    links = JsonField()
+
+
+
+
+class SalesOrderList(JsonObject):
+    metadata = {
+        'endpoint': 'sales_orders'
+    }
+    records = ObjectListField(SalesOrder)
+    count = IntegerField()
+    start = IntegerField()
+    limit = IntegerField()

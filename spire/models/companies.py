@@ -7,6 +7,9 @@ class BackupSchedule(JsonObject):
     keep = IntegerField()
 
 class Company(JsonObject):
+    metadata = {
+        'endpoint': 'none'
+    }
     name = StringField()
     description = StringField()
     needs_upgrade = BooleanField()

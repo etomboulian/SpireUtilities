@@ -1,5 +1,5 @@
 
-class Editable():
+class EditableObject():
 
     def edit(self):
         # We can already directly edit an object so just use this to mark self as in edit and return self
@@ -10,7 +10,6 @@ class Editable():
         api_client = self.metadata['api_client']
         api_client.save(self)
         self.metadata['in_edit'] = None
-
 
     def delete(self):
         if hasattr(self, 'metadata'):

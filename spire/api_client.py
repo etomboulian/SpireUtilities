@@ -21,7 +21,8 @@ class ApiClient:
     company_endpoints = {
         'none': '',
         'customers': 'customers/',
-        'sales_orders': 'sales/orders/'
+        'sales_orders': 'sales/orders/',
+        'sales_history': 'sales/invoices/'
     }
 
     def __init__(self, hostname, username, password, port=10880):
@@ -74,7 +75,7 @@ class ApiClient:
             raise e
 
         self._validate(response)
-        obj = Pykson().from_json(response.text, type, accept_unknown=True)
+        obj = Pykson().from_json(response.text, type)
         return obj
 
     def list(self, type, **kwargs):
@@ -83,6 +84,7 @@ class ApiClient:
         # Move the returned data records into a custom List type
         results = RecordList()
         for item in records:
+            item.metadata['api_client'] = self
             results.append(item)
         return results
 
@@ -97,6 +99,7 @@ class ApiClient:
 
         # take all of the records into results list from the first page
         for item in list.records:
+            item.metadata['api_client'] = self
             results.append(item)
         
         # get all remaining pages and extract the data into results list
@@ -112,7 +115,7 @@ class ApiClient:
         # if the object already has an id then try to update it
         if obj.id is not None:
             url = self.root_url + self.root_endpoints['company_list'] + self.company_name + '/' + self.company_endpoints[obj.metadata['endpoint']] + str(obj.id)
-            obj._validate_content()
+            # obj._validate_content()
             # Do the update
             response = self.session.put(url, data=Pykson().to_json(obj))
             self._validate(response)

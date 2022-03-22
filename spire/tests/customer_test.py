@@ -15,8 +15,14 @@ inspire = spire.Company('inspire2021')
 # Print a list of the names of all the customers from the first page of the customer list
 print([customer.name for customer in inspire.Customers.list()])
 
+# Get a list of all customers
+customers = inspire.Customers.all()
+
 # Print a list of all customer ids that exist in the system
-print([customer.id for customer in inspire.Customers.all()])
+print([customer.id for customer in customers])
+
+# Print the total number of customers in the all collection
+print(len(customers))
 
 # Get a the customer with customerNo FORHIS
 forhis = inspire.Customers.get(2)
