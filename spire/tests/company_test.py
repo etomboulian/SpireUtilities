@@ -5,6 +5,8 @@ username = 'ApiUser'
 password = 'Spire123!'
 port = 10880
 
+print("Running company test script")
+
 # Instantiate the Spire SDK with some credentials
 spire = ApiClient(hostname, username, password, port=port)
 
@@ -19,3 +21,5 @@ company_info = inspire.info()
 
 # Print out customer info
 print(f'Company Name: {company_info.name}, Description: {company_info.description}, needs_upgrad {company_info.needs_upgrade}')
+
+print()

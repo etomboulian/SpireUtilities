@@ -1,13 +1,10 @@
 from datetime import datetime
 from spire import ApiClient
 
-hostname = 'better-snow-2961.spirelan.com'
-username = 'ApiUser'
-password = 'Spire123!'
-port = 10880
+print("Running customer test script")
 
 # Instantiate the Spire SDK with some credentials
-spire = ApiClient(hostname, username, password, port=port)
+spire = ApiClient('better-snow-2961.spirelan.com', 'ApiUser', 'Spire123!', port=10880)
 
 # Get a connection to inspire2021 company
 inspire = spire.Company('inspire2021')
@@ -30,8 +27,7 @@ forhis = inspire.Customers.get(2)
 # Change the customer name to a unique value
 forhis.name = f"TEST CUSTOMER {datetime.now()}"
 
-# Show the object to update
-print(forhis)
-
 # Save the customer back into the database
 forhis.save()
+
+print()

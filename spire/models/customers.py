@@ -2,7 +2,7 @@ from pykson import (JsonObject, ObjectListField, StringField, IntegerField,
                     BooleanField, FloatField, DateField, ObjectField, JsonField)
 
 from spire.models.data.editable_object import EditableObject
-from .contacts import PhoneNumber
+from .contacts import OrderContact, PhoneNumber
 
 class CustomerAddressContact(JsonObject):
     name = StringField()
@@ -50,10 +50,10 @@ class CustomerDetailPaymentTerms(JsonObject):
     description = StringField()
     daysBeforeDue = IntegerField()
     daysAllowed = IntegerField()
-    discountRate = IntegerField()
+    discountRate = FloatField(accepts_string=True)
     applyDiscountToNet = BooleanField()
     applyDiscountToFreight = BooleanField()
-    udf = JsonField(),
+    udf = JsonField()
     createdBy = StringField()
     modifiedBy = StringField()
     created = StringField()
@@ -93,6 +93,10 @@ class CustomerDetailAddress(JsonObject):
     glAccount = StringField()
     defaultWarehouse = StringField()
     udf = JsonField()
+    created = StringField()
+    modified = StringField()
+    contacts = ObjectListField(OrderContact)
+    salesTaxes = ObjectListField(CustomerAddressSalesTaxes)
 
 # /customers/{id}
 class CustomerDetail(JsonObject, EditableObject):
@@ -144,7 +148,6 @@ class Customer(JsonObject, EditableObject):
     metadata = {
         'endpoint':'customers'
     }
-    
     id = IntegerField()
     customerNo = StringField()
     name = StringField()
