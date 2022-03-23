@@ -70,7 +70,7 @@ class ApiClient:
         params['limit'] = kwargs.get('limit', 10)
 
         try:
-            response = self.session.get(url,params=params)
+            response = self.session.get(url,params=params, proxies=self.proxies)
         except Exception as e:
             raise e
 
@@ -117,7 +117,7 @@ class ApiClient:
             url = self.root_url + self.root_endpoints['company_list'] + self.company_name + '/' + self.company_endpoints[obj.metadata['endpoint']] + str(obj.id)
             # obj._validate_content()
             # Do the update
-            response = self.session.put(url, data=Pykson().to_json(obj))
+            response = self.session.put(url, data=Pykson().to_json(obj), proxies=self.proxies)
             self._validate(response)
             if response.status_code not in (200, 201):
                 raise Exception("Unable to update the current object")
@@ -125,8 +125,12 @@ class ApiClient:
         # if the object has no id then create it
         else:
             url = self.root_url + self.root_endpoints['company_list'] + self.company_name + '/' + self.company_endpoints[obj.metadata['endpoint']]
+
+            data = Pykson().to_json(obj)
+            data = self._strip_nulls(data)
+            print(data)
             # Do the create
-            response = self.session.post(url, data=Pykson().to_json(obj))
+            response = self.session.post(url, data=data, proxies=self.proxies)
             self._validate(response)
             if response.status_code not in [201]:
                 raise Exception("Unable to create the new object")
@@ -141,6 +145,16 @@ class ApiClient:
         self._validate(response)
         if response.status_code not in [204]:
             raise Exception("Unable to delete the passed in object")
+
+    def _strip_nulls(self, obj):
+        obj = json.loads(obj)
+        print(obj)
+        for k in list(obj.keys()):
+            if obj[k] is None or obj[k] == "":
+                print(f'deleting a key: {k}: {obj[k]}')
+                del obj[k]
+        s = json.dumps(obj)
+        return s
 
 # Wrapper class around ApiClient to manage the single and collection item types
 class ItemClient:
@@ -161,4 +175,6 @@ class ItemClient:
         return self.api_client.all(self.collection_type)
 
     def new(self):
-        return Pykson().from_json("{}", self.single_type).edit()
+         item = Pykson().from_json("{}", self.single_type).edit()
+         item.metadata['api_client'] = self.api_client
+         return item

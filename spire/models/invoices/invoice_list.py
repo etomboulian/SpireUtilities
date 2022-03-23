@@ -1,7 +1,7 @@
 from tokenize import String
 from pykson import JsonObject, ObjectListField, IntegerField, StringField, DateField, ObjectField, FloatField, JsonField
-from .addresses import OrderAddress, OrderShippingAddress
-from .contacts import OrderContact
+from ..address.addresses import OrderAddress, OrderShippingAddress
+from ..contacts import OrderContact
 
 class Customer(JsonObject):
     id = IntegerField()

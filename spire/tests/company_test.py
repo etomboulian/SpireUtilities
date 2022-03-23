@@ -7,7 +7,6 @@ port = 10880
 
 print("Running company test script")
 
-# Instantiate the Spire SDK with some credentials
 spire = ApiClient(hostname, username, password, port=port)
 
 # Print a list of all of the companies on the Spire server

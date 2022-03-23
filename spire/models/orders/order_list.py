@@ -1,7 +1,7 @@
 from pykson import JsonObject, JsonField, ObjectListField, ObjectField, StringField, IntegerField, DateField, FloatField, BooleanField, DateTimeField
 from spire.models.data.editable_object import EditableObject
-from .addresses import OrderAddress, OrderShippingAddress
-from .contacts import OrderContact
+from ..address.addresses import OrderAddress, OrderShippingAddress
+from ..contacts import OrderContact
 
 
 class Customer(JsonObject):
@@ -83,9 +83,6 @@ class SalesOrder(JsonObject, EditableObject):
     modifiedBy = StringField()
     links = JsonObject()
     links = JsonField()
-
-
-
 
 class SalesOrderList(JsonObject):
     metadata = {

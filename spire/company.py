@@ -1,5 +1,5 @@
 from spire.api_client import ApiClient, ItemClient
-from spire.models.customers import CustomerDetail
+from spire.models import Customer
 from .models import CompanyList, CompanyLinks
 
 class Companies:
@@ -7,7 +7,7 @@ class Companies:
         self.api_client = api_client
     
     def list(self):
-        return ItemClient(self.api_client, Company, CompanyList).list() #self.api_client.list(CompanyList)
+        return ItemClient(self.api_client, Company, CompanyList).list()
 
 class Company:
     def __init__(self, api_client: str, company_name: str):
@@ -28,12 +28,12 @@ class Company:
     # Sales Order Interface
     @property
     def SalesOrders(self):
-        from .models.orders import SalesOrder, SalesOrderList
+        from .models import SalesOrder, SalesOrderList 
         return ItemClient(self.api_client, SalesOrder, SalesOrderList)
 
     # Customers Interface
     @property
     def Customers(self):
-        from .models.customers import CustomerDetail, CustomerList
-        return ItemClient(self.api_client, CustomerDetail, CustomerList)
+        from .models import Customer, CustomerList
+        return ItemClient(self.api_client, Customer, CustomerList)
         

@@ -1,4 +1,5 @@
 from spire import ApiClient
+import datetime
 
 # Credentials and server info
 hostname = 'better-snow-2961.spirelan.com'
@@ -56,9 +57,9 @@ customer1.save()
 
 # Get a list of all of the customers from the company
 new_customer = company.Customers.new()
-new_customer.customerNo = 'ABC1234'
+new_customer.customerNo = f'ABC1234 {datetime.datetime.now().second}'
 new_customer.name = 'SDK Test Customer'
-#new_customer.save()
+new_customer.save()
 
 # Print a list of the company's customer ids and confirm how many records we got
 print([customer.id for customer in customers], '\n', f"Received {len(customers)} records")
