@@ -1,7 +1,10 @@
 from pykson import JsonObject, IntegerField, StringField, ObjectField, ObjectListField, DateField, JsonField, DateTimeField
 from typing import List
 
-from spire.models.data.editable_object import EditableObject
+from spire.data.editable_object import EditableObject
+
+# /api/v2/companies/inspire2021/sales/invoices/{id}
+# Allows: [GET, HEAD, PUT, DELETE, OPTIONS]
 
 class PhoneFaxNumber(JsonObject):
     number = StringField()

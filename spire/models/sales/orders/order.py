@@ -1,7 +1,10 @@
 from typing import List
 from pykson import JsonObject, JsonField, StringField, IntegerField, ObjectField, ObjectListField, DateTimeField, DateField, BooleanField, ListField, FloatField
 
-from spire.models.data.editable_object import EditableObject
+from spire.data.editable_object import EditableObject
+
+# /api/v2/companies/inspire2021/sales/orders/{id}
+# Allows: [GET, HEAD, PUT, DELETE, OPTIONS]
 
 class Number(JsonObject):
     number = StringField()

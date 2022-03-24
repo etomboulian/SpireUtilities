@@ -2,7 +2,7 @@ import json
 import requests
 from pykson import Pykson
 import logging
-from .models.data.record_list import RecordList
+from .data.record_list import RecordList
 
 logging.basicConfig(level=logging.INFO, filename='api_client.log')
 
@@ -25,7 +25,10 @@ class ApiClient:
         'none': '',
         'customers': 'customers/',
         'addresses': 'addresses/',
+        'ap_transactions': 'ap/transactions/',
+        'ap_batches': 'ap/batches/',
         'ar_transactions': 'ar/transactions/',
+        'ar_batches': 'ar/batches/',
         'sales_orders': 'sales/orders/',
         'sales_orders/items': 'sales/items/',
         'sales_history': 'sales/invoices/',
@@ -129,7 +132,7 @@ class ApiClient:
             if response.status_code not in (200, 201):
                 raise Exception("Unable to update the current object")
 
-        # if the object has no id then create it
+        # if the object has no id then create it # Note this branch may now be depricated with the implentation of create
         else:
             url = self.root_url + self.root_endpoints['company_list'] + self.company_name + '/' + self.company_endpoints[obj.metadata['endpoint']]
 

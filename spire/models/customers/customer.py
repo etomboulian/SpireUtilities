@@ -1,6 +1,9 @@
 from pykson import (JsonObject, ObjectListField, StringField, IntegerField, DateTimeField,
                     BooleanField, FloatField, DateField, ObjectField, JsonField)
-from spire.models.data.editable_object import EditableObject
+from spire.data.editable_object import EditableObject
+
+# /api/v2/companies/inspire2021/customers/{id}
+# Allows: [GET, HEAD, PUT, DELETE, OPTIONS]
 
 class PhoneNumber(JsonObject):
     number = StringField()

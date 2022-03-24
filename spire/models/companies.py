@@ -18,12 +18,19 @@ class Company(JsonObject):
     locations = JsonField()
     backup_schedules = ObjectListField(BackupSchedule)
 
+# /api/v2/companies/
+# Allows: [GET, HEAD, OPTIONS]
+
 class CompanyList(JsonObject):
     metadata = {
         'endpoint': 'company_list'
     }
     
     records = ObjectListField(Company)
+
+
+# /api/v2/companies/{companyName}
+# Allows: [GET, HEAD, PUT, DELETE, OPTIONS]
 
 class CompanyLinks(JsonObject):
     metadata = {

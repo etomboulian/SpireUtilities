@@ -1,5 +1,9 @@
 from pykson import (JsonObject, ObjectListField, StringField, IntegerField, DateTimeField, 
                     BooleanField, FloatField, DateField, ObjectField, JsonField)
+from spire.data.editable_object import EditableObject
+
+# /api/v2/companies/inspire2021/ar/transactions/
+# Allows: [GET, HEAD, PUT, DELETE, OPTIONS]
 
 class Customer(JsonObject):
     id = IntegerField()
@@ -14,7 +18,7 @@ class Tax(JsonObject):
     rate = IntegerField(accepts_string=True)
     total = IntegerField(accepts_string=True)
 
-class ARTransaction(JsonObject):
+class ARTransaction(JsonObject, EditableObject):
     metadata = {
         'endpoint': 'ar_transactions'
     }

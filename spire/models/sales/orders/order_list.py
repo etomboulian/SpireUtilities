@@ -1,5 +1,8 @@
 from pykson import JsonObject, JsonField, ObjectListField, ObjectField, StringField, IntegerField, DateField, FloatField, BooleanField, DateTimeField
-from spire.models.data.editable_object import EditableObject
+from spire.data.editable_object import EditableObject
+
+# /api/v2/companies/inspire2021/sales/orders/
+# Allows: [GET, HEAD, OPTIONS, POST]
 
 class OrderAddress(JsonObject):
     id = IntegerField()
@@ -26,8 +29,6 @@ class OrderShippingAddress(JsonObject):
     country = StringField()
     shipCode = StringField()
     shipDescription = StringField()
-
-
 
 class PhoneNumber(JsonObject):
     number = StringField()

@@ -1,7 +1,10 @@
 from pykson import (JsonObject, ObjectListField, StringField, IntegerField, DateTimeField, 
                     BooleanField, FloatField, DateField, ObjectField, JsonField)
 
-from spire.models.data.editable_object import EditableObject
+from spire.data.editable_object import EditableObject
+
+# /api/v2/companies/inspire2021/ar/transactions/
+# Allows: [GET, HEAD, OPTIONS, POST]
 
 class Customer(JsonObject):
     id = IntegerField()

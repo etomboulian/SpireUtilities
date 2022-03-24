@@ -1,5 +1,8 @@
 from pykson import JsonField, JsonObject, ObjectField, ObjectListField, IntegerField, StringField, BooleanField, FloatField, DateField, DateTimeField, ListField
 
+# /api/v2/companies/inspire2021/addresses/
+# Allows [GET, HEAD, OPTIONS]
+
 class Fax(JsonObject):
     number = StringField()
     format = IntegerField()

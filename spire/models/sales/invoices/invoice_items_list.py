@@ -1,8 +1,8 @@
-from sqlite3 import Date
-from tokenize import String
 from pykson import JsonField, JsonObject, ObjectField, ObjectListField, IntegerField, StringField, BooleanField, FloatField, DateField, DateTimeField, ListField
-from spire.models.data.editable_object import EditableObject
-from typing import List
+from spire.data.editable_object import EditableObject
+
+# /api/v2/companies/inspire2021/sales/invoice_items/
+# Allows: [GET, HEAD, OPTIONS]
 
 class Customer(JsonObject):
     customerNo = StringField()

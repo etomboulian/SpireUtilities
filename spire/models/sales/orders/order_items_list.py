@@ -1,5 +1,8 @@
 from pykson import JsonField, JsonObject, ObjectField, ObjectListField, IntegerField, StringField, BooleanField, FloatField, DateField, DateTimeField
-from spire.models.data.editable_object import EditableObject
+from spire.data.editable_object import EditableObject
+
+# /api/v2/companies/inspire2021/sales/items/
+# Allows: [GET, HEAD, OPTIONS]
 
 class Customer(JsonObject):
     customerNo = StringField()
