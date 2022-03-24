@@ -1,7 +1,5 @@
-from xmlrpc.client import DateTime
 from pykson import JsonField, JsonObject, ObjectField, ObjectListField, IntegerField, StringField, BooleanField, FloatField, DateField, DateTimeField
-
-from datetime import datetime
+from spire.models.data.editable_object import EditableObject
 
 class Customer(JsonObject):
     customerNo = StringField()
@@ -64,7 +62,7 @@ class Order(JsonObject):
     modified = DateTimeField(datetime_format='%Y-%m-%dT%H:%M:%S.%f')
 
 
-class SalesOrderItem(JsonObject):
+class SalesOrderItem(JsonObject, EditableObject):
     metadata = {
         'endpoint': 'sales_orders/items'
     }

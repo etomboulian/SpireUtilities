@@ -26,8 +26,8 @@ class ApiClient:
         'customers': 'customers/',
         'sales_orders': 'sales/orders/',
         'sales_orders/items': 'sales/items/',
-        'sales_history': 'sales/invoices/'
-
+        'sales_history': 'sales/invoices/',
+        'sales_history/items': 'sales/invoice_items'
     }
 
     def __init__(self, hostname, username, password, port=10880):

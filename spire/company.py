@@ -47,4 +47,8 @@ class Company:
     def SalesHistory(self):
         from .models import Invoice, InvoiceList
         return ItemClient(self.api_client, Invoice, InvoiceList)
-        
+    
+    @property
+    def SalesHistoryItems(self):
+        from .models import InvoiceItemList
+        return ItemClient(self.api_client, None, InvoiceItemList)
