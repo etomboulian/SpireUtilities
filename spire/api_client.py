@@ -24,6 +24,8 @@ class ApiClient:
     company_endpoints = {
         'none': '',
         'customers': 'customers/',
+        'addresses': 'addresses/',
+        'ar_transactions': 'ar/transactions/',
         'sales_orders': 'sales/orders/',
         'sales_orders/items': 'sales/items/',
         'sales_history': 'sales/invoices/',

@@ -25,13 +25,26 @@ class Company:
     def info(self):
         return self.api_client.get(CompanyLinks)
 
-    # Customers Interface
+    @property
+    def Addresses(self):
+        from .models import AddressList
+        return ItemClient(self.api_client, None, AddressList)
+
+    @property
+    def AccountsReceivable(self):
+        from .models import ARTransaction, ARTransactionList
+        return ItemClient(self.api_client, ARTransaction, ARTransactionList)
+
+    @property
+    def AccountsPayable(self):
+        from .models import APTransaction, APTransactionList
+        return ItemClient(self.api_client, APTransaction, APTransactionList)
+
     @property
     def Customers(self):
         from .models import Customer, CustomerList
         return ItemClient(self.api_client, Customer, CustomerList)
 
-    # Sales Order Interface
     @property
     def SalesOrders(self):
         from .models import SalesOrder, SalesOrderList 
@@ -42,7 +55,6 @@ class Company:
         from .models import SalesOrderItemList
         return ItemClient(self.api_client, None, SalesOrderItemList)
 
-    # Sales History Interface
     @property
     def SalesHistory(self):
         from .models import Invoice, InvoiceList
