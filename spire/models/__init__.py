@@ -12,6 +12,8 @@ from .customers.customer_list import CustomerList
 from .sales.orders.order import Order as SalesOrder
 from .sales.orders.order_list import SalesOrderList
 
+from .sales.order_items.order_items_list import SalesOrderItemList
+
 # Invoice Single and List Types
 from .sales.invoices.invoice import Invoice
 from .sales.invoices.invoice_list import InvoiceList

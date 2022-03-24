@@ -25,7 +25,9 @@ class ApiClient:
         'none': '',
         'customers': 'customers/',
         'sales_orders': 'sales/orders/',
+        'sales_orders/items': 'sales/items/',
         'sales_history': 'sales/invoices/'
+
     }
 
     def __init__(self, hostname, username, password, port=10880):
@@ -204,30 +206,35 @@ Response: {json.dumps(response.text)} '''
 
 # Wrapper class around ApiClient to manage the single and collection item types
 class ItemClient:
-    def __init__(self, api_client, single_type, collection_type, **kwargs):
+    def __init__(self, api_client, single_type, collection_type):
         self.api_client = api_client
         self.single_type = single_type
         self.collection_type = collection_type
-        self.disallowed_methods = kwargs.get('disallowed_methods', None)
 
     def get(self, id):
+        if self.single_type is None:
+            raise Exception("Unable to get an item that doesn't have a single item endpoint")
         item = self.api_client.get(self.single_type, id)
         item.metadata['api_client'] = self.api_client
         return item
 
     def list(self, where=None):
+        if self.collection_type is None:
+            raise Exception("Unable to list an item that doesn't have a collection endpoint")
         return self.api_client.list(self.collection_type, filter=where)
         
     def all(self):
+        if self.collection_type is None:
+            raise Exception("Unable to list an item that doesn't have a collection endpoint")
         return self.api_client.all(self.collection_type)
 
     def new(self, fields:dict=None):
+        if self.single_type is None:
+            raise Exception("Unable to create an item that doesn't have a single item endpoint")
         if fields is None:
             raise Exception("Unable to create a new item without the minimum required data")
         if not isinstance(fields, dict):
             raise Exception("Unable to create a new item, the required fields were not passed in as a dict")
-        print(fields)
-        #ItemClient.check_min_required_fields(self.single_type, fields)
 
         new_item = self.api_client.create(self.single_type, fields)
         new_item.metadata['api_client'] = self.api_client

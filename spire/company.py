@@ -29,13 +29,18 @@ class Company:
     @property
     def Customers(self):
         from .models import Customer, CustomerList
-        return ItemClient(self.api_client, Customer, CustomerList, disallowed_methods=['POST'])
+        return ItemClient(self.api_client, Customer, CustomerList)
 
     # Sales Order Interface
     @property
     def SalesOrders(self):
         from .models import SalesOrder, SalesOrderList 
         return ItemClient(self.api_client, SalesOrder, SalesOrderList)
+
+    @property
+    def SalesOrderItems(self):
+        from .models import SalesOrderItemList
+        return ItemClient(self.api_client, None, SalesOrderItemList)
 
     # Sales History Interface
     @property
