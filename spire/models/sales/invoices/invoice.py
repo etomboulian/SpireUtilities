@@ -1,25 +1,21 @@
+from pykson import JsonObject, IntegerField, StringField, ObjectField, ObjectListField, DateField, JsonField, DateTimeField
 from typing import List
-from pykson import JsonObject, JsonField, StringField, IntegerField, ObjectField, ObjectListField, DateTimeField, DateField, BooleanField
 
 from spire.models.data.editable_object import EditableObject
 
-class Number(JsonObject):
-    number = StringField()
-    format = IntegerField()
-
-class Fax(JsonObject):
+class PhoneFaxNumber(JsonObject):
     number = StringField()
     format = IntegerField()
 
 class Contact(JsonObject):
     name = StringField()
     email = StringField()
-    phone: ObjectField(Number)
-    fax: ObjectField(Fax)
+    phone = ObjectField(PhoneFaxNumber, default_value=PhoneFaxNumber())
+    fax = ObjectField(PhoneFaxNumber, default_value=PhoneFaxNumber())
 
 class SalesTax(JsonObject):
     code = IntegerField()
-    exempt = IntegerField()
+    exempt = StringField()
 
 class Salesperson(JsonObject):
     code = StringField()
@@ -45,24 +41,24 @@ class Address(JsonObject):
     postalCode = StringField()
     provState = StringField()
     country = StringField()
-    phone = ObjectField(Number)
-    fax = ObjectField(Fax)
+    phone = ObjectField(PhoneFaxNumber, default_value=PhoneFaxNumber())
+    fax = ObjectField(PhoneFaxNumber, default_value=PhoneFaxNumber())
     email = StringField()
     website = StringField()
     shipCode = StringField()
     shipDescription = StringField()
-    salesperson = ObjectField(Salesperson)
-    territory = ObjectField(Territory)
+    salesperson = ObjectField(Salesperson, default_value=Salesperson())
+    territory =  ObjectField(Territory, default_value=Territory())
     sellLevel = IntegerField()
-    glAccount = StringField()
+    glAccount = IntegerField()
     defaultWarehouse = StringField()
     udf = JsonField()
-    created = DateTimeField()
-    modified = DateTimeField()
+    created = StringField()
+    modified = StringField()
     contacts = ObjectListField(Contact)
     salesTaxes = ObjectListField(SalesTax)
 
-class Currency(JsonObject):
+class Currency:
     id = IntegerField()
     code = StringField()
     description = StringField()
@@ -73,42 +69,30 @@ class Currency(JsonObject):
     decimalPlaces = IntegerField()
     symbolPosition = StringField()
     rate = IntegerField()
-    rateMethod = StringField(default_value='')
+    rateMethod = StringField()
     glAccountNo = IntegerField()
     thousandsSeparator = StringField()
     lastYearRate = List[int]
     thisYearRate = List[int]
     nextYearRate = List[int]
 
-class Customer(JsonObject):
+class Customer:
     id = IntegerField()
     code = StringField()
-    customerNo = StringField()
+    customer_no = StringField()
     name = StringField()
 
 class Inventory:
     id = IntegerField()
-    whse = StringField() 
+    whse = StringField()
     part_no = StringField()
     description = StringField()
 
-class Serial:
-    id = IntegerField()
-    serial_number = IntegerField()
-    whse = StringField()
-    partNo = StringField()
-    committedQty = IntegerField()
-    unitCost = StringField()
-    sellPrice = StringField()
-    expiryDate = DateField()
-
 class Item:
     id = IntegerField()
-    orderNo = StringField()
+    invoiceNo = StringField()
     sequence = IntegerField()
-    parentSequence = IntegerField()
-    inventory = ObjectField(Inventory)
-    serials = ObjectListField(Serial)
+    inventory = ObjectField(Inventory, default_value=Inventory())
     whse = StringField()
     partNo = StringField()
     description = StringField()
@@ -116,21 +100,14 @@ class Item:
     orderQty = IntegerField()
     committedQty = IntegerField()
     backorderQty = IntegerField()
-    sellMeasure = StringField()
     retailPrice = StringField()
     unitPrice = StringField()
-    userPrice = bool
-    discountable = bool
+    lineDiscountPct = IntegerField()
     discountPct = IntegerField()
-    discountAmt = IntegerField()
-    taxFlags = List[bool]
-    vendor = StringField()
-    levyCode = IntegerField()
-    requiredDate = DateField()
+    taxFlags: List[bool]
+    sellMeasure = StringField()
     extendedPriceOrdered = StringField()
     extendedPriceCommitted = StringField()
-    kit = BooleanField()
-    suppress = BooleanField()
     udf = JsonField()
 
 class Links:
@@ -142,58 +119,46 @@ class Tax:
     shortName = StringField()
     rate = IntegerField()
     exemptNo = StringField()
-    total = IntegerField()
+    total = StringField()
 
-class Order(JsonObject, EditableObject):
-    metadata = { 'endpoint': 'sales_orders'}
+class Invoice(JsonObject, EditableObject):
+    metadata = { 
+        'endpoint': 'sales_history', 
+        'allowed_methods': ['GET', 'PUT', 'DELETE']
+        
+        }
     id = IntegerField()
-    orderNo = StringField(default_value='')
+    invoiceNo = StringField()
+    orderNo = StringField()
     division = StringField()
     location = StringField()
     profitCenter = StringField()
-    invoiceNo = StringField()
     customer = ObjectField(Customer, default_value=Customer())
-    creditApprovedAmount = IntegerField()
-    creditApprovedDate = DateField()
-    creditApprovedUser = StringField()
     currency = ObjectField(Currency, default_value=Currency())
-    status = StringField()
-    type = StringField()
-    hold = bool
     orderDate = DateField()
     invoiceDate = DateField()
     requiredDate = DateField()
-    # recurrenceRule = None
-    address = ObjectField(Address)
-    shipping_address = ObjectField(Address, default_value=Address())
-    contact = ObjectField(Contact, default_value=Contact())
+    address = ObjectField(Address, default_value=Address())
+    shippingAddress = ObjectField(Address, default_value=Address())
     customerPo = StringField()
-    batchNo = StringField()
     fob = StringField()
     incoterms = StringField()
-    incoterms_place: StringField()
-    reference_no: StringField()
-    shipping_carrier: StringField()
-    ship_date: StringField()
-    tracking_no: StringField()
-    terms_code: StringField()
-    terms_text: StringField()
-    freight: IntegerField()
-    taxes: List[Tax]
-    subtotal: StringField()
-    subtotal_ordered: StringField()
-    discount: IntegerField()
-    total_discount: IntegerField()
-    total: StringField()
-    total_ordered: StringField()
-    gross_profit: StringField()
+    incotermsPlace = StringField()
+    referenceNo = StringField()
+    shippingCarrier = StringField()
+    shipDate = StringField()
+    trackingNo = StringField()
+    termsCode = StringField()
+    termsText = StringField()
+    freight = IntegerField()
+    taxes: List[int]
+    subtotal = StringField()
+    total = StringField()
     items = ObjectListField(Item)
-    # payments = JsonField() 
+    payments = ObjectListField(JsonField())
     udf = JsonField()
     createdBy = StringField()
     modifiedBy = StringField()
-    created = DateTimeField()
-    modified = DateTimeField()
-    deletedBy = StringField()
-    deleted = DateTimeField()
-    links = JsonObject(Links)
+    created = DateTimeField(datetime_format='%Y-%m-%dT%H:%M:%S.%f')
+    modified = DateTimeField(datetime_format='%Y-%m-%dT%H:%M:%S.%f')
+    links = ObjectField(Links)

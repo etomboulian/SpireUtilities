@@ -1,7 +1,41 @@
-from tokenize import String
-from pykson import JsonObject, ObjectListField, IntegerField, StringField, DateField, ObjectField, FloatField, JsonField
-from ..address.addresses import OrderAddress, OrderShippingAddress
-from ..contacts import OrderContact
+from pykson import JsonObject, ObjectListField, IntegerField, StringField, DateField, ObjectField, FloatField, JsonField, DateTimeField
+from spire.models.data.editable_object import EditableObject
+
+class OrderAddress(JsonObject):
+    id = IntegerField()
+    line1 = StringField()
+    line2 = StringField()
+    line3 = StringField()
+    line4 = StringField()
+    city = StringField()
+    provState = StringField()
+    postalCode = StringField()
+    country = StringField()
+
+class OrderShippingAddress(JsonObject):
+    id = IntegerField()
+    shipId = StringField()
+    name = StringField()
+    line1 = StringField()
+    line2 = StringField()
+    line3 = StringField()
+    line4 = StringField()
+    city = StringField()
+    provState = StringField()
+    postalCode = StringField()
+    country = StringField()
+    shipCode = StringField()
+    shipDescription = StringField()
+
+class PhoneNumber(JsonObject):
+    number = StringField()
+    format = IntegerField()
+
+class OrderContact(JsonObject):
+    name = StringField()
+    email = StringField()
+    phone = ObjectField(PhoneNumber)
+    fax = ObjectField(PhoneNumber)
 
 class Customer(JsonObject):
     id = IntegerField()
@@ -12,9 +46,11 @@ class Customer(JsonObject):
     foregroundColor = IntegerField()
     backgroundColor = IntegerField()
 
-
-class Invoice(JsonObject):
-    metadata = { 'endpoint': 'sales_history'}
+class Invoice(JsonObject, EditableObject):
+    metadata = { 
+        'endpoint': 'sales_history', 
+        'allowed_methods': ['GET', 'POST']
+        }
     id = IntegerField()
     invoiceNo = StringField()
     invoiceDate = DateField()
@@ -61,8 +97,8 @@ class Invoice(JsonObject):
     contact = ObjectField(OrderContact)
     createdBy = StringField()
     modifiedBy = StringField()
-    created = StringField() 
-    modified = StringField()
+    created = DateTimeField(datetime_format='%Y-%m-%dT%H:%M:%S.%f')
+    modified = DateTimeField(datetime_format='%Y-%m-%dT%H:%M:%S.%f')
     links = JsonField()
 
 class InvoiceList(JsonObject):

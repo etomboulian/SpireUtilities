@@ -1,5 +1,8 @@
 import tkinter as tk
+
+from ui.frames.company_select_frame import CompanySelectionFrame
 from .main_frame import LandingPage
+from tkinter import messagebox
 
 class LoginFrame(tk.Frame):
     OUTSIDE_PADDING = 20
@@ -38,7 +41,6 @@ class LoginFrame(tk.Frame):
         username = self.username_field.get()
         password = self.password_field.get()
 
-       
         try:
             from spire import ApiClient
             self.parent.api_client = ApiClient(hostname, username, password)
@@ -46,21 +48,20 @@ class LoginFrame(tk.Frame):
                 self.parent.frame.pack_forget()
                 self.parent.frame.destroy()
                 # send the user to the landing page
-                self.parent.show_frame(LandingPage)
-            else:
-                # TODO: pass any exceptions received at lower layers up to the GUI
-                pass
+                self.parent.frame = CompanySelectionFrame(self.parent)
+                self.parent.frame.pack()
         except Exception as e:
-            popup_window = tk.Tk()
-            popup_window.wm_title("Login Error")
-            popup_window.geometry("300x200")
-            message = e
-            label = tk.Label(popup_window, text=message, wraplength=300, justify=tk.LEFT)
-            label.pack()
-            close_button = tk.Button(popup_window, text="Ok", command=popup_window.destroy)
-            close_button.pack()
+            messagebox.showerror("Login Error", e)
             
-            print(e)
+            # popup_window = tk.Tk()
+            # popup_window.wm_title()
+            # popup_window.geometry("300x200")
+            # message = e
+            # label = tk.Label(popup_window, text=message, wraplength=300, justify=tk.LEFT)
+            # label.pack()
+            # close_button = tk.Button(popup_window, text="Ok", command=popup_window.destroy)
+            # close_button.pack()
+            # print(e)
 
     def quit(self):
         self.parent.destroy()

@@ -9,9 +9,12 @@ class App(tk.Tk):
         self.api_client = None
         self.frame = None
         self.last_frame = None
+        self.company = {}
 
         self.title('Spire Tools')
-        self.show_frame(LoginFrame)
+        #self.show_frame(LoginFrame)
+        self.frame = LoginFrame(self)
+        self.frame.pack()
     
     def show_frame(self, frameType):
         # if there is already a frame then remove it

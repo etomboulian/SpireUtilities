@@ -1,4 +1,4 @@
-from pykson import (JsonObject, ObjectListField, StringField, IntegerField, 
+from pykson import (JsonObject, ObjectListField, StringField, IntegerField, DateTimeField,
                     BooleanField, FloatField, DateField, ObjectField, JsonField)
 from spire.models.data.editable_object import EditableObject
 
@@ -18,8 +18,8 @@ class CustomerDetailPaymentTerms(JsonObject):
     udf = JsonField()
     createdBy = StringField()
     modifiedBy = StringField()
-    created = StringField()
-    modified = StringField()
+    created = DateTimeField(datetime_format='%Y-%m-%dT%H:%M:%S.%f')
+    modified = DateTimeField(datetime_format='%Y-%m-%dT%H:%M:%S.%f')
 
 class CustomerDetailContact(JsonObject):
     name = StringField()
@@ -67,8 +67,8 @@ class CustomerDetailAddress(JsonObject):
     glAccount = StringField()
     defaultWarehouse = StringField()
     udf = JsonField()
-    created = StringField()
-    modified = StringField()
+    created = DateTimeField(datetime_format='%Y-%m-%dT%H:%M:%S.%f')
+    modified = DateTimeField(datetime_format='%Y-%m-%dT%H:%M:%S.%f')
     contacts = ObjectListField(CustomerDetailContact)
     salesTaxes = ObjectListField(CustomerAddressSalesTaxes)
 
@@ -76,7 +76,8 @@ class CustomerDetailAddress(JsonObject):
 # /customers/{id}
 class CustomerDetail(JsonObject, EditableObject):
     metadata = {
-        'endpoint':'customers'
+        'endpoint':'customers',
+        'min_required_fields': ['customerNo'] 
     }
     id = IntegerField()
     code = StringField()
@@ -108,11 +109,11 @@ class CustomerDetail(JsonObject, EditableObject):
     defaultShipTo = StringField()
     specialCode = StringField()
     upload = BooleanField()
-    lastModified = StringField()
+    lastModified = DateTimeField(datetime_format='%Y-%m-%dT%H:%M:%S.%f')
     paymentProviderId = IntegerField()
     udf = JsonField()
     createdBy = StringField()
     modifiedBy = StringField()
-    created = StringField()
-    modified = StringField() 
+    created = DateTimeField(datetime_format='%Y-%m-%dT%H:%M:%S.%f')
+    modified = DateTimeField(datetime_format='%Y-%m-%dT%H:%M:%S.%f') 
     links = JsonField()

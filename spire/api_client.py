@@ -1,7 +1,10 @@
 import json
 import requests
 from pykson import Pykson
+import logging
 from .models.data.record_list import RecordList
+
+logging.basicConfig(level=logging.INFO, filename='api_client.log')
 
 class ApiClient:
     version = '0.0.1'
@@ -42,11 +45,6 @@ class ApiClient:
     def company_name(self, value):
         self._company_name = value
 
-    # Validate that we received a response code indicating success
-    def _validate(self, response):
-        if response.status_code not in (200, 201, 204):
-            raise Exception(f"Response Code: {response.status_code}, {response.text}")
-
     def get(self, type, id=None, **kwargs):
         # if we have a company name then we have a selected company, if not then we get endpoints off the base
         if self.company_name is None:
@@ -71,8 +69,10 @@ class ApiClient:
 
         try:
             response = self.session.get(url,params=params, proxies=self.proxies)
+            message = f'api_client.py:ApiClient.get {response.request.method} {response.request.url} {response.status_code}'
+            logging.info(message)
         except Exception as e:
-            raise e
+            logging.info(e)
 
         self._validate(response)
         obj = Pykson().from_json(response.text, type)
@@ -115,9 +115,12 @@ class ApiClient:
         # if the object already has an id then try to update it
         if obj.id is not None:
             url = self.root_url + self.root_endpoints['company_list'] + self.company_name + '/' + self.company_endpoints[obj.metadata['endpoint']] + str(obj.id)
-            # obj._validate_content()
-            # Do the update
+
             response = self.session.put(url, data=Pykson().to_json(obj), proxies=self.proxies)
+            
+            message = f'api_client.py:ApiClient.save: {response.request.method} {response.request.url} {response.status_code}'
+            logging.info(message)
+
             self._validate(response)
             if response.status_code not in (200, 201):
                 raise Exception("Unable to update the current object")
@@ -131,37 +134,81 @@ class ApiClient:
             print(data)
             # Do the create
             response = self.session.post(url, data=data, proxies=self.proxies)
+            
+            message = f'api_client.py:ApiClient.save {response.request.method} {response.request.url} {response.status_code}'
+            logging.info(message)
+
             self._validate(response)
             if response.status_code not in [201]:
                 raise Exception("Unable to create the new object")
 
-    def create(self, object):
-        raise NotImplementedError()
+    def create(self, type, fields=None):
+        if self.company_name is None:
+            url = self.root_url + self.root_endpoints[type.metadata['endpoint']]
+        else:
+            url = self.root_url + self.root_endpoints['company_list'] + self.company_name + '/' + self.company_endpoints[type.metadata['endpoint']]
+
+        response = self.session.post(url, json=fields, proxies=self.proxies)
+        message = f'api_client.py:ApiClient.create {response.request.method} {response.request.url} {response.status_code}'
+        logging.info(message)
+        
+        self._validate(response)
+        
+        new_item_endpoint = response.headers['Location']
+        print(new_item_endpoint)
+        second_response = self.session.get(new_item_endpoint, proxies=self.proxies)
+        self._validate(second_response)
+
+        new_item = Pykson().from_json(second_response.text, type)
+        return new_item
 
     def delete(self, obj):
         url = self.root_url + self.root_endpoints['company_list'] + self.company_name + '/' + self.company_endpoints[obj.metadata['endpoint']] + str(obj.id)
         # Do Delete
         response = self.session.delete(url, data=Pykson().to_json(obj))
+    
+        message = f'api_client:ApiClient.delete {response.request.method} {response.request.url} {response.status_code}'
+        logging.info(message)
+
         self._validate(response)
         if response.status_code not in [204]:
             raise Exception("Unable to delete the passed in object")
 
-    def _strip_nulls(self, obj):
-        obj = json.loads(obj)
-        print(obj)
-        for k in list(obj.keys()):
-            if obj[k] is None or obj[k] == "":
-                print(f'deleting a key: {k}: {obj[k]}')
-                del obj[k]
-        s = json.dumps(obj)
+    # Validate that we received a response code indicating success
+    @staticmethod
+    def _validate(response):
+        if response.status_code not in (200, 201, 204):
+            message = f'''{response.request.method} {response.request.url} {response.status_code} {response.request.body} 
+Response: {json.dumps(response.text)} '''
+            logging.info(message)
+            raise Exception(f"Response Code: {response.status_code}, {response.text}")
+
+    @staticmethod
+    def _strip_nulls(d):        
+        d = json.loads(d)
+        result = ApiClient._remove_empty_elements(d)
+        s = json.dumps(result)
         return s
+
+    @staticmethod
+    def _remove_empty_elements(d):
+        def empty(x):
+            return x is None or x == {} or x == []
+            
+        if not isinstance(d, (dict, list)):
+            return d
+        elif isinstance(d, list):
+            return [v for v in (ApiClient._remove_empty_elements(v) for v in d) if not empty(v)]
+        else:
+            return {k: v for k, v in ((k, ApiClient._remove_empty_elements(v)) for k, v in d.items()) if not empty(v)}
 
 # Wrapper class around ApiClient to manage the single and collection item types
 class ItemClient:
-    def __init__(self, api_client, single_type, collection_type):
+    def __init__(self, api_client, single_type, collection_type, **kwargs):
         self.api_client = api_client
         self.single_type = single_type
         self.collection_type = collection_type
+        self.disallowed_methods = kwargs.get('disallowed_methods', None)
 
     def get(self, id):
         item = self.api_client.get(self.single_type, id)
@@ -174,7 +221,23 @@ class ItemClient:
     def all(self):
         return self.api_client.all(self.collection_type)
 
-    def new(self):
-         item = Pykson().from_json("{}", self.single_type).edit()
-         item.metadata['api_client'] = self.api_client
-         return item
+    def new(self, fields:dict=None):
+        if fields is None:
+            raise Exception("Unable to create a new item without the minimum required data")
+        if not isinstance(fields, dict):
+            raise Exception("Unable to create a new item, the required fields were not passed in as a dict")
+        print(fields)
+        #ItemClient.check_min_required_fields(self.single_type, fields)
+
+        new_item = self.api_client.create(self.single_type, fields)
+        new_item.metadata['api_client'] = self.api_client
+        return new_item
+    
+    @staticmethod
+    def check_min_required_fields(type, fields: dict):
+        min_required_fields = set(type.metadata['min_required_fields'])
+        print(min_required_fields)
+        actual_fields = set(fields.keys())
+        print(actual_fields)
+        if not actual_fields.issuperset(min_required_fields):
+            raise Exception(f'Minimum required fields were not given, unable to create a new instance of {type}')

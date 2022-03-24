@@ -56,8 +56,9 @@ edit_customer1.hold = False
 customer1.save()
 
 # Get a list of all of the customers from the company
-new_customer = company.Customers.new()
-new_customer.customerNo = f'ABC1234 {datetime.datetime.now().second}'
+customer = {}
+customer['customerNo'] = f'ABC1234'
+new_customer = company.Customers.new(customer)
 new_customer.name = 'SDK Test Customer'
 new_customer.save()
 

@@ -1,8 +1,43 @@
 from pykson import JsonObject, JsonField, ObjectListField, ObjectField, StringField, IntegerField, DateField, FloatField, BooleanField, DateTimeField
 from spire.models.data.editable_object import EditableObject
-from ..address.addresses import OrderAddress, OrderShippingAddress
-from ..contacts import OrderContact
 
+class OrderAddress(JsonObject):
+    id = IntegerField()
+    line1 = StringField()
+    line2 = StringField()
+    line3 = StringField()
+    line4 = StringField()
+    city = StringField()
+    provState = StringField()
+    postalCode = StringField()
+    country = StringField()
+
+class OrderShippingAddress(JsonObject):
+    id = IntegerField()
+    shipId = StringField()
+    name = StringField()
+    line1 = StringField()
+    line2 = StringField()
+    line3 = StringField()
+    line4 = StringField()
+    city = StringField()
+    provState = StringField()
+    postalCode = StringField()
+    country = StringField()
+    shipCode = StringField()
+    shipDescription = StringField()
+
+
+
+class PhoneNumber(JsonObject):
+    number = StringField()
+    format = IntegerField()
+
+class OrderContact(JsonObject):
+    name = StringField()
+    email = StringField()
+    phone = ObjectField(PhoneNumber)
+    fax = ObjectField(PhoneNumber)
 
 class Customer(JsonObject):
     id = IntegerField()
@@ -15,7 +50,10 @@ class Customer(JsonObject):
     backgroundColor = IntegerField()
 
 class SalesOrder(JsonObject, EditableObject):
-    metadata = { 'endpoint': 'sales_orders'}
+    metadata = { 
+        'endpoint': 'sales_orders', 
+        'allowed_methods': ['GET', 'POST']
+        }
     id = IntegerField()
     orderNo = StringField()
     invoiceNo = StringField()
@@ -75,11 +113,11 @@ class SalesOrder(JsonObject, EditableObject):
     address = ObjectField(OrderAddress)
     shippingAddress = ObjectField(OrderShippingAddress)
     contact = ObjectField(OrderContact)
-    deleted = StringField()
+    deleted = DateTimeField(datetime_format='%Y-%m-%dT%H:%M:%S.%f')
     deletedBy = StringField()
-    created = StringField()
+    created = DateTimeField(datetime_format='%Y-%m-%dT%H:%M:%S.%f')
     createdBy = StringField()
-    modified = StringField()
+    modified = DateTimeField(datetime_format='%Y-%m-%dT%H:%M:%S.%f')
     modifiedBy = StringField()
     links = JsonObject()
     links = JsonField()

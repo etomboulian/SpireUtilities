@@ -1,3 +1,4 @@
+import logging
 from .api_client import ApiClient
 from .models import Status
 
@@ -7,6 +8,7 @@ class Server:
     def __init__(self, hostname, username, password, port=10880):
         self.api_client = ApiClient(hostname, username, password, port)
         self.authenticated = False
+        logging.basicConfig(level=logging.INFO, file='api_client.log')
 
         if not self.login():
             raise Exception('Not Logged in')

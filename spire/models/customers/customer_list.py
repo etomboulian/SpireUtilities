@@ -1,8 +1,11 @@
-from pykson import (JsonObject, ObjectListField, StringField, IntegerField, 
+from pykson import (JsonObject, ObjectListField, StringField, IntegerField, DateTimeField, 
                     BooleanField, FloatField, DateField, ObjectField, JsonField)
 
 from spire.models.data.editable_object import EditableObject
-from ..contacts import OrderContact, PhoneNumber
+
+class PhoneNumber(JsonObject):
+    number = StringField()
+    format = IntegerField()
 
 class CustomerAddressContact(JsonObject):
     name = StringField()
@@ -88,9 +91,9 @@ class Customer(JsonObject, EditableObject):
     upload = BooleanField()
     lastModified = StringField()
     address = ObjectField(CustomerAddress)
-    created = StringField()
+    created = DateTimeField(datetime_format='%Y-%m-%dT%H:%M:%S.%f')
     createdBy = StringField()
-    modified = StringField()
+    modified = DateTimeField(datetime_format='%Y-%m-%dT%H:%M:%S.%f')
     modifiedBy = StringField()
     links = JsonField()
 
